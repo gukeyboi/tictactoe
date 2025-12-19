@@ -1,18 +1,23 @@
 #include <iostream>
 #include <string>
 #include <array>
+#include <vector>
+#include <limits>
 #include "GameBoard.hpp"
+
+
 
 struct Player
 {
     std::string name;
-    std::string symbol;
+    char symbol;
+    std::vector<int> playerPlays{};
 };
 
 Player create_player()
 {
     std::string name;
-    std::string symbol;
+    char symbol;
     std::cout << "Veuillez indiquer votre nom" << std::endl;
     std::cin >> name;
     std::cout << "Veuillez indiquer votre symbole" << std::endl;
@@ -21,27 +26,88 @@ Player create_player()
     return one;
 }
 
-
-void draw_board(const std::array<std::array<char, 3>, 3> &board)
+void playerTurn(GameBoard &activeBoard, Player &currentplayer)
 {
-    for (size_t row = 0; row < board.size(); ++row) {
-        for (size_t column = 0; column < board[row].size(); ++column) {
-            size_t pos = row * board[row].size() + column + 1; // 1..9
-            char ch = board[row][column];
-            if (ch == ' ') ch = static_cast<char>('0' + pos); // show position number for empty cells
-            std::cout << ' ' << ch << ' ';
-            if (column + 1 < board[row].size()) std::cout << '|';
+    int num_case;
+    while (true) {
+        std::cout << currentplayer.name <<" quelle case choisissez-vous ?" << std::endl;
+        if (!(std::cin >> num_case)) {
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cout << "Valeur invalide, recommencez" << std::endl;
+            continue;
         }
-        std::cout << std::endl;
-       //if (r + 1 < board.size()) std::cout << "---+---+---" << std::endl;
+        if (num_case >= 1 && num_case <= 9) {
+            if (!activeBoard.isCellEmpty(num_case)) {
+                continue;
+            }
+                activeBoard.boardMove(num_case, currentplayer.symbol);
+                activeBoard.draw_board();
+            
+            currentplayer.playerPlays.push_back(num_case);
+            //vérifier si le joueur win
+            break;
+        }
     }
+    
+}
+
+
+
+void modePvP(GameBoard activeBoard, Player &player1, Player &player2)
+{   
+    activeBoard.draw_board();
+    int turns {0};
+    while (turns < 9)
+    {
+        
+        playerTurn(activeBoard, player1);
+        turns++;
+        playerTurn(activeBoard, player2);
+        turns++;
+    }
+    
+
+    
+    
+
+    
 }
 
 int main()
 {
-    auto player = create_player();
-    auto board = create_board_game();
+    GameBoard activeBoard;
+    activeBoard.create_board_game();
+    std::cout << "Bienvenue dans le jeu du TicTacToe, veuillez choisir votre mode de jeu" << std::endl;
+    std::cout << "1. Joueur contre Joueur, 2. Contre l'ordinateur" << std::endl;
+    int gamemode{0};
 
-    std::cout << "Bienvenue " << player.name << "!" << std::endl;
-    draw_board(board);
+    do
+    {
+        if (!(std::cin >> gamemode)) {
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); 
+            std::cout << "Entrée invalide, recommencez" << std::endl;
+            continue;
+        }
+
+        if (gamemode == 1)
+        {
+            auto player1 = create_player();
+            auto player2 = create_player();
+            modePvP(activeBoard, player1, player2);
+            break;
+        }
+        else if (gamemode == 2)
+        {
+            auto player1 = create_player();
+            break;
+        }
+        else
+        {
+            std::cout << "Choix inconnu, recommencez" << std::endl;
+        }
+    } while (gamemode != 1 && gamemode != 2);
+    
+    return 0;
 }

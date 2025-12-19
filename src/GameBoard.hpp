@@ -3,11 +3,15 @@
 #include <string>
 #include <array>
 
-std::array<std::array<char, 3>, 3> create_board_game()
+struct GameBoard
 {
-    std::array<std::array<char, 3>, 3> board{};
-    for (auto &row : board) {
-        row.fill(' ');
-    }
-    return board;
-}
+   void create_board_game();
+   void draw_board();
+   void boardMove(int entry, char symbol);
+   bool isCellEmpty(int entry);
+   void convertInt(int entry);
+   std::array<std::array<char, 3>, 3> boardArray;
+   int row;
+   int column;
+};
+
