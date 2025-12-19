@@ -9,7 +9,6 @@ struct Player
     std::string symbol;
 };
 
-
 Player create_player()
 {
     std::string name;
