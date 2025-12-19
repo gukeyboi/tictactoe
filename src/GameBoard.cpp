@@ -10,11 +10,11 @@
 
 void GameBoard::create_board_game()
 {
-    for (int row = 0; row < 3; row++)
+    for (int temprow = 0; temprow < 3; temprow++)
     {
-        for (int column = 0; column < 3; column++)
+        for (int tempcolumn = 0; tempcolumn < 3; tempcolumn++)
         {
-            boardArray[row][column] = ' ';
+            boardArray[temprow][tempcolumn] = ' ';
         }
        
     }
@@ -22,11 +22,11 @@ void GameBoard::create_board_game()
 
 void GameBoard::draw_board()
 {
-    for (int row = 0; row < 3; row++)
+    for (int temprow = 0; temprow < 3; temprow++)
     {
-        for (int column = 0; column < 3; column++)
+        for (int tempcolumn = 0; tempcolumn < 3; tempcolumn++)
         {
-            std::cout <<  " | " << boardArray[row][column];
+            std::cout <<  " | " << boardArray[temprow][tempcolumn];
         }
         std::cout <<  " |" << std::endl;
         //if (row + 1 < board.size()) std::cout << "---+---+---" << std::endl;
@@ -56,4 +56,33 @@ void GameBoard::convertInt(int entry)
 void GameBoard::boardMove(int entry, char symbol) {
     convertInt(entry);
     boardArray[row][column] = symbol;
+}
+
+bool GameBoard::checkVictory(char symbol) {
+    for (int i = 0; i < 3; i++)
+    {
+        if (boardArray[i][0] == boardArray[i][1] && boardArray[i][1] == boardArray[i][2] && symbol == boardArray[i][2])
+        {
+            std::cout << "lignes" << std::endl;
+            return true; 
+        }
+        
+        if (boardArray[0][i] == boardArray[1][i] && boardArray[1][i] == boardArray[2][i] && symbol == boardArray[2][i])
+        {
+            std::cout << "colonnes" << std::endl;
+            return true; 
+        }
+        
+    }
+   if (boardArray[0][0] == boardArray[1][1] && boardArray[1][1] == boardArray[2][2] && symbol == boardArray[2][2])
+        {
+            std::cout << "diagonales" << std::endl;
+            return true; 
+        }
+    if (boardArray[0][2] == boardArray[1][1] && boardArray[1][1] == boardArray[2][0] && symbol == boardArray[0][2])
+        {
+            std::cout << "diagonales" << std::endl;
+            return true; 
+        }
+    return false;
 }

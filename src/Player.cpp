@@ -26,6 +26,8 @@ Player create_player()
     return one;
 }
 
+
+
 void playerTurn(GameBoard &activeBoard, Player &currentplayer)
 {
     int num_case;
@@ -45,7 +47,6 @@ void playerTurn(GameBoard &activeBoard, Player &currentplayer)
                 activeBoard.draw_board();
             
             currentplayer.playerPlays.push_back(num_case);
-            //vérifier si le joueur win
             break;
         }
     }
@@ -58,20 +59,26 @@ void modePvP(GameBoard activeBoard, Player &player1, Player &player2)
 {   
     activeBoard.draw_board();
     int turns {0};
-    while (turns < 9)
+    while (turns < 4)
     {
-        
         playerTurn(activeBoard, player1);
-        turns++;
+       if (activeBoard.checkVictory(player1.symbol))
+       {
+        std::cout << "bravo joueur 1" << std::endl;
+        return;
+       }
+        
         playerTurn(activeBoard, player2);
+
+        if (activeBoard.checkVictory(player2.symbol))
+       {
+        std::cout << "bravo joueur 2" << std::endl;
+        return;
+       }
         turns++;
     }
-    
-
-    
-    
-
-    
+    playerTurn(activeBoard, player1);
+    std::cout << "Match Nul !" << std::endl;
 }
 
 int main()

@@ -7,6 +7,7 @@ struct GameBoard
 {
    void create_board_game();
    void draw_board();
+   bool checkVictory(char symbol);
    void boardMove(int entry, char symbol);
    bool isCellEmpty(int entry);
    void convertInt(int entry);
