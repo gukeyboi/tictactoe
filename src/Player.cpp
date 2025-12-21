@@ -20,8 +20,21 @@ Player create_player()
     char symbol;
     std::cout << "Veuillez indiquer votre nom" << std::endl;
     std::cin >> name;
-    std::cout << "Veuillez indiquer votre symbole" << std::endl;
-    std::cin >> symbol;
+    do {
+        std::cout << "Veuillez choisir votre symbole (X ou O)" << std::endl;
+        std::cin >> symbol;
+        //symbol = toupper(symbol);
+    } while (symbol != 'X' && symbol != 'O');
+    Player one{name, symbol};
+    return one;
+}
+
+Player create_ia(Player &player1)
+{
+    std::string name = "IA";
+    char symbol;
+    char iaSymbol = (player1.symbol == 'X') ? 'O' : 'X';
+    return Player{"IA", iaSymbol};
     Player one{name, symbol};
     return one;
 }
@@ -53,8 +66,6 @@ void playerTurn(GameBoard &activeBoard, Player &currentplayer)
     
 }
 
-
-
 void modePvP(GameBoard activeBoard, Player &player1, Player &player2)
 {   
     activeBoard.draw_board();
@@ -81,6 +92,32 @@ void modePvP(GameBoard activeBoard, Player &player1, Player &player2)
     std::cout << "Match Nul !" << std::endl;
 }
 
+void modeIA(GameBoard activeBoard, Player &player1, Player &ia) {
+    activeBoard.draw_board();
+    int turns {0};
+    while (turns < 4)
+    {
+        playerTurn(activeBoard, player1);
+       if (activeBoard.checkVictory(player1.symbol))
+       {
+        std::cout << "bravo joueur 1" << std::endl;
+        return;
+       }
+        
+        playerTurn(activeBoard, ia);
+
+        if (activeBoard.checkVictory(ia.symbol))
+       {
+        std::cout << "Victoire de l'IA, elle va nous remplacer dans quelques années..." << std::endl;
+        return;
+       }
+        turns++;
+    }
+    playerTurn(activeBoard, player1);
+    std::cout << "Match Nul !" << std::endl;
+
+}
+
 int main()
 {
     GameBoard activeBoard;
@@ -94,7 +131,7 @@ int main()
         if (!(std::cin >> gamemode)) {
             std::cin.clear();
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); 
-            std::cout << "Entrée invalide, recommencez" << std::endl;
+            std::cout << "On a dit 1 ou 2, recommencez" << std::endl;
             continue;
         }
 
@@ -108,6 +145,7 @@ int main()
         else if (gamemode == 2)
         {
             auto player1 = create_player();
+            auto ia = create_player();
             break;
         }
         else

@@ -29,10 +29,10 @@ void GameBoard::draw_board()
             std::cout <<  " | " << boardArray[temprow][tempcolumn];
         }
         std::cout <<  " |" << std::endl;
-        //if (row + 1 < board.size()) std::cout << "---+---+---" << std::endl;
+        //std::cout << "---+---+---" << std::endl;
         
     }
-    std::cout << "tour joué" << std::endl;
+    //std::cout << "tour joué" << std::endl;
 }
 
 bool GameBoard::isCellEmpty(int entry)
