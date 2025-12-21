@@ -66,10 +66,58 @@ void playerTurn(GameBoard &activeBoard, Player &currentplayer)
     
 }
 
-void iaTurn(GameBoard &activeBoard, Player &ia)
+int findBlockMove(GameBoard& board, char player1symbol)
 {
+    const std::array<std::array<int, 3>, 8> allCombinations = {{
+    {1, 2, 3},
+    {4, 5, 6},
+    {7, 8, 9},
+    {1, 4, 7},
+    {2, 5, 8},
+    {3, 6, 9},
+    {1, 5, 9},
+    {3, 5, 7}
+}};
+    for (const std::array<int, 3>& combo : allCombinations)
+    {
+        int countPlayer = 0;
+        int emptyCell = -1;
+
+        for (int cell : combo)
+        {
+            if (!board.isCellEmpty(cell) &&
+                board.getCellSymbol(cell) == player1symbol)
+            {
+                countPlayer++;
+            }
+            else if (board.isCellEmpty(cell))
+            {
+                emptyCell = cell;
+            }
+        }
+
+        if (countPlayer == 2 && emptyCell != -1)
+        {
+            return emptyCell;
+        }
+    }
+    return -1;
+}
+
+void iaTurn(GameBoard &activeBoard, Player &ia, Player &player1)
+{
+    int blockMove = findBlockMove(activeBoard, player1.symbol);
+
+    if (blockMove != -1)
+    {
+        std::cout << "L'IA bloque en case " << blockMove << std::endl;
+        activeBoard.boardMove(blockMove, ia.symbol);
+        activeBoard.draw_board();
+        ia.playerPlays.push_back(blockMove);
+        return;
+    }
     std::vector<int> emptyCells; 
-    for (int i = 1; i < 9; i++)
+    for (int i = 1; i <= 9; i++)
     {
         if (activeBoard.isCellEmpty(i))
         {
@@ -86,6 +134,8 @@ void iaTurn(GameBoard &activeBoard, Player &ia)
     ia.playerPlays.push_back(chosenCell);
     
 }
+
+
 
 void modePvP(GameBoard activeBoard, Player &player1, Player &player2)
 {   
@@ -125,7 +175,7 @@ void modeIA(GameBoard activeBoard, Player &player1, Player &ia) {
         return;
        }
         
-        iaTurn(activeBoard, ia);
+        iaTurn(activeBoard, ia, player1);
 
         if (activeBoard.checkVictory(ia.symbol))
        {
@@ -146,6 +196,7 @@ int main()
     std::cout << "Bienvenue dans le jeu du TicTacToe, veuillez choisir votre mode de jeu" << std::endl;
     std::cout << "1. Joueur contre Joueur, 2. Contre l'ordinateur" << std::endl;
     int gamemode{0};
+    srand(static_cast<unsigned int>(time(nullptr)));
 
     do
     {

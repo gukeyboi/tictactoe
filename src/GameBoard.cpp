@@ -1,9 +1,7 @@
-
 #include <iostream>
 #include <string>
 #include <array>
 #include <vector>
-
 #include "GameBoard.hpp"
 #include "Player.hpp"
 
@@ -16,7 +14,6 @@ void GameBoard::create_board_game()
         {
             boardArray[temprow][tempcolumn] = ' ';
         }
-       
     }
 }
 
@@ -47,6 +44,8 @@ bool GameBoard::isCellEmpty(int entry)
             
 }
 
+
+
 void GameBoard::convertInt(int entry)
 {   
     row = (entry - 1) / 3;
@@ -63,26 +62,33 @@ bool GameBoard::checkVictory(char symbol) {
     {
         if (boardArray[i][0] == boardArray[i][1] && boardArray[i][1] == boardArray[i][2] && symbol == boardArray[i][2])
         {
-            std::cout << "lignes" << std::endl;
+            //std::cout << "lignes" << std::endl;
             return true; 
         }
         
         if (boardArray[0][i] == boardArray[1][i] && boardArray[1][i] == boardArray[2][i] && symbol == boardArray[2][i])
         {
-            std::cout << "colonnes" << std::endl;
+            //std::cout << "colonnes" << std::endl;
             return true; 
         }
         
     }
    if (boardArray[0][0] == boardArray[1][1] && boardArray[1][1] == boardArray[2][2] && symbol == boardArray[2][2])
         {
-            std::cout << "diagonales" << std::endl;
+            //std::cout << "diagonales" << std::endl;
             return true; 
         }
     if (boardArray[0][2] == boardArray[1][1] && boardArray[1][1] == boardArray[2][0] && symbol == boardArray[0][2])
         {
-            std::cout << "diagonales" << std::endl;
+            //std::cout << "diagonales" << std::endl;
             return true; 
         }
     return false;
+}
+
+char GameBoard::getCellSymbol(int cell) const
+{
+    int row = (cell - 1) / 3;
+    int column = (cell - 1) % 3;
+    return boardArray[row][column];
 }
