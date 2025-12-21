@@ -42,7 +42,7 @@ bool GameBoard::isCellEmpty(int entry)
             
             return true;
     }
-    std::cout << "Case déjà occupée, recommencez" << std::endl;
+    
     return false; 
             
 }

@@ -3,6 +3,8 @@
 #include <array>
 #include <vector>
 #include <limits>
+#include <cstdlib>
+#include <ctime>
 #include "GameBoard.hpp"
 
 
@@ -23,7 +25,6 @@ Player create_player()
     do {
         std::cout << "Veuillez choisir votre symbole (X ou O)" << std::endl;
         std::cin >> symbol;
-        //symbol = toupper(symbol);
     } while (symbol != 'X' && symbol != 'O');
     Player one{name, symbol};
     return one;
@@ -39,8 +40,6 @@ Player create_ia(Player &player1)
     return one;
 }
 
-
-
 void playerTurn(GameBoard &activeBoard, Player &currentplayer)
 {
     int num_case;
@@ -54,6 +53,7 @@ void playerTurn(GameBoard &activeBoard, Player &currentplayer)
         }
         if (num_case >= 1 && num_case <= 9) {
             if (!activeBoard.isCellEmpty(num_case)) {
+                std::cout << "Case déjà occupée, recommencez" << std::endl;
                 continue;
             }
                 activeBoard.boardMove(num_case, currentplayer.symbol);
@@ -66,6 +66,27 @@ void playerTurn(GameBoard &activeBoard, Player &currentplayer)
     
 }
 
+void iaTurn(GameBoard &activeBoard, Player &ia)
+{
+    std::vector<int> emptyCells; 
+    for (int i = 1; i < 9; i++)
+    {
+        if (activeBoard.isCellEmpty(i))
+        {
+            emptyCells.push_back(i);
+        }
+    }
+
+    int randomCell = rand() % emptyCells.size();
+    int chosenCell = emptyCells[randomCell];
+    std::cout << "L'IA joue la case " << chosenCell << std::endl;
+    activeBoard.boardMove(chosenCell, ia.symbol);
+    activeBoard.draw_board();
+
+    ia.playerPlays.push_back(chosenCell);
+    
+}
+
 void modePvP(GameBoard activeBoard, Player &player1, Player &player2)
 {   
     activeBoard.draw_board();
@@ -75,7 +96,7 @@ void modePvP(GameBoard activeBoard, Player &player1, Player &player2)
         playerTurn(activeBoard, player1);
        if (activeBoard.checkVictory(player1.symbol))
        {
-        std::cout << "bravo joueur 1" << std::endl;
+        std::cout << "Victoire de " << player1.name << " ! " <<std::endl;
         return;
        }
         
@@ -83,7 +104,7 @@ void modePvP(GameBoard activeBoard, Player &player1, Player &player2)
 
         if (activeBoard.checkVictory(player2.symbol))
        {
-        std::cout << "bravo joueur 2" << std::endl;
+        std::cout << "Victoire de " << player2.name << " ! " <<std::endl;
         return;
        }
         turns++;
@@ -100,11 +121,11 @@ void modeIA(GameBoard activeBoard, Player &player1, Player &ia) {
         playerTurn(activeBoard, player1);
        if (activeBoard.checkVictory(player1.symbol))
        {
-        std::cout << "bravo joueur 1" << std::endl;
+        std::cout << "Victoire de " << player1.name << " ! L'élève ne dépasse pas le maitre. " <<std::endl;
         return;
        }
         
-        playerTurn(activeBoard, ia);
+        iaTurn(activeBoard, ia);
 
         if (activeBoard.checkVictory(ia.symbol))
        {
@@ -145,7 +166,8 @@ int main()
         else if (gamemode == 2)
         {
             auto player1 = create_player();
-            auto ia = create_player();
+            auto ia = create_ia(player1);
+            modeIA(activeBoard, player1, ia);
             break;
         }
         else
