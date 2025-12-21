@@ -21,6 +21,11 @@ Amélioration :
 
 ----------
 
-Bilan :
+Bilan difficulté:
 
-Difficulté principale : l'amélioration de l'IA, elle a nécessité de modifier la fonction iaTurn et d'en implémenter d'autres pour bloquer les coups du joueur.
+Système de victoire : au début je pensais stocker dans un tableau les coups joués de chaque joueur et le comparer avec le tableau des conditions de victoire mais j'ai vite renoncé et préféré une méthode plus simple en utilisant les symboles notés dans la GameBoard.
+
+Implémentation de l'IA random : elle a nécessité d'implémenter une fonction qui scanne le tableau pour reconnaître les cases vides
+
+Difficulté principale, l'amélioration de l'IA : elle a nécessité de modifier la fonction iaTurn et d'en implémenter d'autres pour bloquer les coups du joueur.
+
